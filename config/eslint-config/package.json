@@ -1,0 +1,17 @@
+{
+  "name": "@despesai/eslint-config",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./base": "./base.js",
+    "./next-js": "./next.js",
+    "./node": "./node.js"
+  },
+  "devDependencies": {
+    "@despesai/prettier": "workspace:*",
+    "@rocketseat/eslint-config": "^2.2.2",
+    "eslint-plugin-simple-import-sort": "^12.1.1"
+  },
+  "prettier": "@despesai/prettier"
+}
