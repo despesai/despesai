@@ -1,9 +1,13 @@
 {
   "name": "@despesai/prettier",
   "version": "0.0.0",
-  "main": "index.ts",
+  "type": "module",
   "private": true,
-  "devDependencies": {
+  "main": "./prettier.config.mjs",
+  "exports": {
+    ".": "./prettier.config.mjs"
+  },
+  "dependencies": {
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2"
   }
