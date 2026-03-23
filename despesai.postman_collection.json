@@ -1,0 +1,52 @@
+{
+  "info": {
+    "_postman_id": "952f0ce3-2031-4195-8426-0c3109a42d0c",
+    "name": "despesai",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "18900715"
+  },
+  "item": [
+    {
+      "name": "user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Marcio\",\n    \"email\": \"marcioalvesjun@gmail.com\",\n    \"password\": \"123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "/user",
+          "path": [
+            "user"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3002/user/34b65b8f-2f12-4538-850f-62a986a992a6",
+          "host": [
+            "localhost"
+          ],
+          "port": "3002",
+          "path": [
+            "user",
+            "34b65b8f-2f12-4538-850f-62a986a992a6"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
