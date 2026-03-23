@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node24/tsconfig.json",
+  "extends": "@despesai/typescript-config/node.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./"
