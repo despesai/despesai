@@ -2,22 +2,19 @@
 
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
-import { Button } from '@/components/ui/button'
-
-import Login from './login/page'
+import { FeatureCard } from '@/components/feature-card'
 
 export default function Home() {
   const router = useRouter()
   return (
     <div className="bg-background text-foreground relative min-h-screen w-full overflow-x-hidden font-sans">
-      {/* 1. Background Glows (Mantendo a identidade do SaaS) */}
+
       <div className="bg-brand-purple/20 pointer-events-none absolute -top-[10%] -right-[10%] h-[600px] w-[600px] rounded-full blur-[120px]" />
       <div className="bg-brand-cyan/10 pointer-events-none absolute top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full blur-[100px]" />
 
-      {/* 2. Navbar Minimalista */}
       <nav className="bg-background/80 fixed top-0 z-50 flex w-full items-center justify-between border-b border-white/5 px-6 py-4 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <div className="from-brand-purple to-brand-cyan flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br">
@@ -26,18 +23,12 @@ export default function Home() {
           <span className="text-xl font-bold tracking-tight">DespesAI</span>
         </div>
         <div className="text-muted-foreground hidden gap-8 text-sm font-medium md:flex">
-          <a
+          <Link
             href="#features"
             className="hover:text-foreground transition-colors"
           >
             Funcionalidades
-          </a>
-          <a
-            href="#pricing"
-            className="hover:text-foreground transition-colors"
-          >
-            Preços
-          </a>
+          </Link>
         </div>
         <button
           onClick={() => router.push('/login')}
@@ -47,7 +38,6 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* 3. Hero Section (Onde a venda acontece) */}
       <section className="relative flex flex-col items-center px-6 pt-32 pb-20 text-center">
         <div className="bg-brand-purple/10 border-brand-purple/20 text-brand-purple mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-bold">
           <span className="relative flex h-2 w-2">
@@ -77,9 +67,6 @@ export default function Home() {
           >
             Começar Grátis <Icon icon="lucide:arrow-right" />
           </button>
-          <button className="bg-card border-border hover:bg-muted/50 h-14 rounded-xl border px-8 text-lg font-bold transition-colors">
-            Ver Demo
-          </button>
         </div>
 
         <div className="bg-card/50 relative mt-20 w-full max-w-5xl rounded-2xl border border-white/10 p-2 shadow-2xl transition-all hover:scale-[1.01]">
@@ -97,7 +84,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Features Grid */}
       <section id="features" className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <FeatureCard
@@ -121,22 +107,4 @@ export default function Home() {
   )
 }
 
-function FeatureCard({
-  icon,
-  title,
-  desc,
-}: {
-  icon: string
-  title: string
-  desc: string
-}) {
-  return (
-    <div className="bg-card border-border hover:border-brand-purple/50 group rounded-2xl border p-8 transition-colors">
-      <div className="bg-brand-purple/10 mb-6 flex h-12 w-12 items-center justify-center rounded-lg transition-transform group-hover:scale-110">
-        <Icon icon={icon} className="text-brand-purple text-2xl" />
-      </div>
-      <h3 className="mb-3 text-xl font-bold">{title}</h3>
-      <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
-    </div>
-  )
-}
+
