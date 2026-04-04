@@ -52,12 +52,12 @@ export async function login(raw: unknown) {
 
   const user = await userRepo.findUserByEmail(body.email)
   if (!user) {
-    throw new HttpError(401, 'Invalid email or password')
+    throw new HttpError(401, 'E-mail ou senha inválidos')
   }
 
   const ok = await bcrypt.compare(body.password, user.password)
   if (!ok) {
-    throw new HttpError(401, 'Invalid email or password')
+    throw new HttpError(401, 'E-mail ou senha inválidos')
   }
 
   const token = issueSession(user)
