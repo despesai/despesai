@@ -6,9 +6,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { FeatureCard } from '@/components/feature-card'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function Home() {
   const router = useRouter()
+  const { user, isReady, logout } = useAuth()
+
   return (
     <div className="bg-background text-foreground relative min-h-screen w-full overflow-x-hidden font-sans">
 
@@ -30,12 +33,41 @@ export default function Home() {
             Funcionalidades
           </Link>
         </div>
-        <button
-          onClick={() => router.push('/login')}
-          className="bg-foreground text-background cursor-pointer rounded-full px-5 py-2 text-sm font-bold transition-opacity hover:opacity-90"
-        >
-          Entrar no App
-        </button>
+        {!isReady ? (
+          <span
+            className="bg-muted inline-block h-9 w-[7.5rem] animate-pulse rounded-full"
+            aria-hidden
+          />
+        ) : user ? (
+          <div className="flex items-center gap-3">
+            <span className="text-muted-foreground hidden text-sm font-medium sm:inline">
+              Olá, {user.name}
+            </span>
+            <Link
+              href="/dashboard"
+              className="text-muted-foreground hover:text-foreground hidden text-sm font-semibold transition-colors sm:inline"
+            >
+              Painel
+            </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                await logout()
+              }}
+              className="text-muted-foreground cursor-pointer rounded-full border border-white/10 px-4 py-2 text-sm font-semibold transition-colors hover:text-foreground"
+            >
+              Sair
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => router.push('/login')}
+            className="bg-foreground text-background cursor-pointer rounded-full px-5 py-2 text-sm font-bold transition-opacity hover:opacity-90"
+          >
+            Entrar no App
+          </button>
+        )}
       </nav>
 
       <section className="relative flex flex-col items-center px-6 pt-32 pb-20 text-center">
