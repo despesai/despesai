@@ -15,5 +15,24 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
+  creditCards CreditCard[]
+
   @@map("users")
+}
+
+model CreditCard {
+  id         String   @id @default(uuid())
+  name       String
+  limit      Float
+  closingDay Int
+  dueDay     Int
+  isEnabled  Boolean  @default(true) @map("is_enabled") // Adicionado aqui
+  
+  userId     String   @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("credit_cards")
 }
