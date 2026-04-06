@@ -7,6 +7,7 @@ import { HttpError } from './lib/http-error'
 import { openApiDocument } from './openapi/document'
 import authRouter, { loginHandler, registerHandler } from './routes/auth.routes'
 import userRouter from './routes/user.routes'
+import bankRouter from './routes/bank.routes'
 
 const defaultOrigins = [
   'http://localhost:3000',
@@ -48,13 +49,14 @@ export function createApp() {
     swaggerUi.serve,
     swaggerUi.setup(openApiDocument, {
       customSiteTitle: 'DespesAI API',
-    }),
+    })
   )
 
   app.use('/auth', authRouter)
   app.post('/user', registerHandler)
   app.post('/user/me', loginHandler)
   app.use('/user', userRouter)
+  app.use('/banks', bankRouter)
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     if (res.headersSent) {
@@ -66,7 +68,9 @@ export function createApp() {
       return
     }
     if (err instanceof ZodError) {
-      res.status(400).json({ error: 'Validation failed', details: err.flatten() })
+      res
+        .status(400)
+        .json({ error: 'Validation failed', details: err.flatten() })
       return
     }
     console.error(err)
