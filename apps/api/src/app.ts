@@ -8,6 +8,8 @@ import { openApiDocument } from './openapi/document'
 import authRouter, { loginHandler, registerHandler } from './routes/auth.routes'
 import userRouter from './routes/user.routes'
 import bankRouter from './routes/bank.routes'
+import creditCardRouter from './routes/credit-card.routes'
+import { requireAuth } from './middleware/require-auth.middleware'
 
 const defaultOrigins = [
   'http://localhost:3000',
@@ -26,7 +28,6 @@ const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])]
 
 const corsOptions: CorsOptions = {
   origin(origin, callback) {
-    // No Origin: non-browser clients, curl, Postman, some same-site cases
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true)
       return
@@ -56,7 +57,8 @@ export function createApp() {
   app.post('/user', registerHandler)
   app.post('/user/me', loginHandler)
   app.use('/user', userRouter)
-  app.use('/banks', bankRouter)
+  app.use('/banks', requireAuth, bankRouter)
+  app.use('/credit-cards', requireAuth, creditCardRouter)
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     if (res.headersSent) {
