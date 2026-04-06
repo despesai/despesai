@@ -22,6 +22,7 @@ export const openApiDocument = {
   tags: [
     { name: 'Auth', description: 'Cadastro e login' },
     { name: 'Users', description: 'Perfis de usuário' },
+    { name: 'Banks', description: 'Gerenciamento de contas bancárias' },
   ],
   paths: {
     '/auth/register': {
@@ -223,6 +224,98 @@ export const openApiDocument = {
         },
       },
     },
+    '/banks': {
+      get: {
+        tags: ['Banks'],
+        summary: 'Listar contas bancárias',
+        operationId: 'listBanks',
+        responses: {
+          '200': {
+            description: 'Lista de contas ativas do usuário',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/BankResponse' },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ['Banks'],
+        summary: 'Cadastrar conta bancária',
+        operationId: 'createBank',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreateBankRequest' },
+            },
+          },
+        },
+        responses: {
+          '201': {
+            description: 'Conta criada',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/BankResponse' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/banks/{id}': {
+      put: {
+        tags: ['Banks'],
+        summary: 'Editar conta bancária',
+        operationId: 'updateBank',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/CreateBankRequest' },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Conta atualizada',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/BankResponse' },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ['Banks'],
+        summary: 'Remover conta bancária (Soft Delete)',
+        operationId: 'deleteBank',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+          },
+        ],
+        responses: {
+          '204': { description: 'Conta inativada com sucesso' },
+        },
+      },
+    },
   },
   components: {
     schemas: {
@@ -289,7 +382,34 @@ export const openApiDocument = {
           },
         },
       },
+      CreateBankRequest: {
+        type: 'object',
+        required: ['bankCode', 'name', 'agency', 'accountNumber'],
+        properties: {
+          bankCode: {
+            type: 'string',
+            example: '341',
+            description: 'Código do banco (3 dígitos)',
+          },
+          name: { type: 'string', example: 'Itaú' },
+          agency: { type: 'string', example: '0001' },
+          accountNumber: { type: 'string', example: '12345-6' },
+          balance: { type: 'number', example: 100.0 },
+        },
+      },
+      BankResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          bankCode: { type: 'string' },
+          name: { type: 'string' },
+          agency: { type: 'string' },
+          accountNumber: { type: 'string' },
+          balance: { type: 'number' },
+          isActive: { type: 'boolean' },
+          userId: { type: 'string', format: 'uuid' },
+        },
+      },
     },
   },
 }
-

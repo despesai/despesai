@@ -7,8 +7,8 @@ export const registerBodySchema = z.object({
 })
 
 export const loginBodySchema = z.object({
-  email: z.string().trim().email('Invalid email'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().trim().email('E-mail inválido'),
+  password: z.string().min(1, 'Senha é obrigatória'),
 })
 
 export type RegisterBody = z.infer<typeof registerBodySchema>

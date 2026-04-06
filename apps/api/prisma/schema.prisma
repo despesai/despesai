@@ -15,11 +15,24 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
+  banks Bank[]
   creditCards CreditCard[]
 
   @@map("users")
 }
 
+model Bank {
+  id  String @id @default(uuid())
+  bankCode String
+  name String
+  agency String
+  accountNumber String
+  balance Decimal @db.Decimal(10, 2)
+  isActive Boolean @default(true)
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+  
 model CreditCard {
   id         String   @id @default(uuid())
   name       String

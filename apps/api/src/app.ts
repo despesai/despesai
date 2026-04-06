@@ -7,6 +7,7 @@ import { HttpError } from './lib/http-error'
 import { openApiDocument } from './openapi/document'
 import authRouter, { loginHandler, registerHandler } from './routes/auth.routes'
 import userRouter from './routes/user.routes'
+import bankRouter from './routes/bank.routes'
 import creditCardRouter from './routes/credit-card.routes'
 import { requireAuth } from './middleware/require-auth.middleware'
 
@@ -56,6 +57,7 @@ export function createApp() {
   app.post('/user', registerHandler)
   app.post('/user/me', loginHandler)
   app.use('/user', userRouter)
+  app.use('/banks', requireAuth, bankRouter)
   app.use('/credit-cards', requireAuth, creditCardRouter)
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
