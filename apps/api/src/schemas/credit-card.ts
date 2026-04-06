@@ -5,7 +5,7 @@ export const createCreditCardSchema = z.object({
   limit: z.number().positive(),
   closingDay: z.number().min(1).max(31),
   dueDay: z.number().min(1).max(31),
-  isEnabled: z.boolean().optional().default(true), // Adicionado aqui
+  isEnabled: z.boolean().optional().default(true),
 })
 
 export const updateCreditCardSchema = createCreditCardSchema.partial()

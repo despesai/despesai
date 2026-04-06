@@ -4,13 +4,10 @@ import { requireAuth } from '../middleware/require-auth.middleware'
 
 const router = Router()
 
-router.use(requireAuth)
-
 router.post('/', async (req, res, next) => {
   try {
     const userId = req.user?.id
 
-    console.log('ID do utilizador capturado do req.user:', userId)
     if (!userId) {
       return res.status(401).json({ message: 'User ID not found in request' })
     }

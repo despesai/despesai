@@ -24,14 +24,14 @@ export async function createCreditCard(input: {
 
 export async function findManyCreditCardsByUserId(userId: string) {
   return prisma.creditCard.findMany({
-    where: { userId },
+    where: { userId, isEnabled: true },
     orderBy: { createdAt: 'desc' },
   })
 }
 
 export async function findCreditCardByIdAndUserId(id: string, userId: string) {
   return prisma.creditCard.findFirst({
-    where: { id, userId },
+    where: { id, userId, isEnabled: true },
   })
 }
 

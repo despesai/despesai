@@ -4,6 +4,6 @@
     "outDir": "./dist",
     "rootDir": "./"
   },
-  "include": ["**/*.ts", "generated/**/*.ts", "**/*.d.ts"],
+  "include": ["**/*.ts", "**/*.d.ts"],
   "exclude": ["dist"]
 }
