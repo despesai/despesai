@@ -5,9 +5,9 @@ const router = Router()
 
 router.post('/', async (req, res, next) => {
   try {
-    //retirado para teste sem middleware
-    //const userId = (req as any).user.id
-    const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    //para teste sem middleware
+    //const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    const userId = (req as any).user.id
     const result = await bankService.create(userId, req.body)
     res.status(201).json(result)
   } catch (e) {
@@ -17,9 +17,9 @@ router.post('/', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    //retirado para teste sem middleware
-    //const userId = (req as any).user.id
-    const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    //para teste sem middleware
+    //const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    const userId = (req as any).user.id
     const result = await bankService.list(userId)
     res.status(200).json(result)
   } catch (e) {
@@ -29,9 +29,9 @@ router.get('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    //retirado para teste sem middleware
-    //const userId = (req as any).user.id
-    const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    //para teste sem middleware
+    //const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    const userId = (req as any).user.id
     const bankId = req.params.id
     const result = await bankService.update(userId, bankId, req.body)
     res.status(200).json(result)
@@ -42,9 +42,9 @@ router.put('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    //retirado para teste sem middleware
-    //const userId = (req as any).user.id
-    const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    //para teste sem middleware
+    //const userId = 'b9ccd61c-0f20-4731-b9e8-9feaaab4214a'
+    const userId = (req as any).user.id
     const bankId = req.params.id
     await bankService.remove(userId, bankId)
     res.status(204).send()
