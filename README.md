@@ -1,159 +1,186 @@
-# Turborepo starter
+# DespesAI
 
-This Turborepo starter is maintained by the Turborepo core team.
+Monorepo [Turborepo](https://turborepo.dev) com **API** (Express + Prisma + PostgreSQL) e **web** (Next.js). Este documento cobre apenas o **ambiente de desenvolvimento**.
 
-## Using this example
+## Pré-requisitos
 
-Run the following command:
+- [Node.js](https://nodejs.org/) 18 ou superior
+- [pnpm](https://pnpm.io/) 9 (o repositório fixa `packageManager` no `package.json` da raiz)
+- PostgreSQL acessível (local ou remoto) para a API
+
+## Estrutura do repositório
+
+| Caminho | Descrição |
+|--------|-----------|
+| `apps/api` | Backend HTTP (Express), Prisma, JWT, documentação OpenAPI |
+| `apps/web` | Frontend (Next.js App Router), BFF em `app/api` que repassa auth para a API |
+| `config/eslint-config` | Configuração compartilhada do ESLint |
+| `config/typescript-config` | `tsconfig` base do monorepo |
+| `config/prettier` | Prettier compartilhado |
+
+## Configuração (desenvolvimento)
+
+### 1. Instalar dependências
+
+Na raiz do repositório:
 
 ```sh
-npx create-turbo@latest
+pnpm install
 ```
 
-## What's inside?
+### 2. Variáveis de ambiente da API
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@despesai/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@despesai/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@despesai/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+Copie o exemplo e ajuste os valores em `apps/api`:
 
 ```sh
-cd my-turborepo
-turbo build
+cp apps/api/.env.example apps/api/.env
 ```
 
-Without global `turbo`, use your package manager:
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `DATABASE_URL` | Sim | URL do PostgreSQL no formato `postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public` |
+| `JWT_SECRET` | Sim | Segredo para assinar tokens JWT (use uma string longa e aleatória) |
+| `PORT` | Não | Porta da API (padrão: **3002**) |
+| `CORS_ORIGINS` | Não | Lista separada por vírgula de origens extras permitidas pelo CORS |
+
+A API já permite, por padrão, `http://localhost:3000` e `http://127.0.0.1:3000` (origem do Next em dev).
+
+O Prisma carrega também `apps/api/.env.local` se existir (`prisma.config.ts`).
+
+### 3. Banco de dados e Prisma
+
+Com o PostgreSQL rodando e `DATABASE_URL` correto, em `apps/api`:
 
 ```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+cd apps/api
+pnpm exec prisma migrate dev
+pnpm exec prisma generate
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Isso aplica as migrações em `apps/api/prisma/migrations` e gera o client em `apps/api/generated/prisma`.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### 4. Variáveis de ambiente do Next (web)
 
 ```sh
-turbo build --filter=docs
+cp apps/web/.env.example apps/web/.env
 ```
 
-Without global `turbo`:
+| Variável | Obrigatória | Descrição |
+|----------|-------------|-----------|
+| `API_URL` | Recomendada | URL da API usada nas **rotas de servidor** do Next (proxy/BFF). Ex.: `http://localhost:3002` |
+| `NEXT_PUBLIC_API_URL` | Recomendada | Mesma base da API para código que roda no **browser** |
+| `JWT_SECRET` | Sim | Deve ser **o mesmo** `JWT_SECRET` da API (usado nas rotas server-side que validam o cookie de sessão) |
+
+## Como rodar em desenvolvimento
+
+### API e web juntos (recomendado)
+
+Na raiz:
 
 ```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+pnpm dev
 ```
 
-### Develop
+O Turborepo sobe o `dev` de cada app em paralelo:
 
-To develop all apps and packages, run the following command:
+- **Web:** [http://localhost:3000](http://localhost:3000) (`next dev --port 3000`)
+- **API:** [http://localhost:3002](http://localhost:3002) (ou a porta definida em `PORT`)
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
+### Apenas um app
 
 ```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
+pnpm exec turbo dev --filter=api
 pnpm exec turbo dev --filter=web
 ```
 
-### Remote Caching
+### Documentação interativa da API
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+Com a API no ar:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- Swagger UI: [http://localhost:3002/api-docs](http://localhost:3002/api-docs)
+- OpenAPI JSON: [http://localhost:3002/openapi.json](http://localhost:3002/openapi.json)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+## API (`apps/api`) — estrutura e rotas HTTP
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Organização de pastas (principal)
+
+| Pasta / arquivo | Função |
+|-----------------|--------|
+| `src/index.ts` | Entrada: cria o app Express e escuta na porta |
+| `src/app.ts` | Montagem de middlewares, rotas e tratamento de erros |
+| `src/routes/` | Routers Express (`auth.routes.ts`, `user.routes.ts`) |
+| `src/services/` | Regras de negócio (ex.: `auth.service.ts`) |
+| `src/repositories/` | Acesso a dados (ex.: `user.repository.ts`) |
+| `src/schemas/` | Validação / contratos (Zod), ex.: `auth.ts` |
+| `src/lib/` | Utilitários (`prisma.ts`, `jwt.ts`, `http-error.ts`) |
+| `src/openapi/document.ts` | Documento OpenAPI 3 servido em `/openapi.json` e `/api-docs` |
+| `prisma/` | `schema.prisma`, migrações |
+
+### Rotas expostas pelo Express
+
+| Método | Caminho | Descrição |
+|--------|---------|-----------|
+| `GET` | `/openapi.json` | Especificação OpenAPI |
+| * | `/api-docs` | Interface Swagger |
+| `POST` | `/auth/register` | Cadastro |
+| `POST` | `/auth/login` | Login (resposta inclui JWT) |
+| `POST` | `/user` | Cadastro (mesmo handler de registro) |
+| `POST` | `/user/me` | Login (mesmo handler de login) |
+| `GET` | `/user/:id` | Dados públicos do usuário por ID |
+
+Erros tipados usam `HttpError`; falhas de validação Zod retornam `400` com `details`.
+
+### Modelo de dados (Prisma)
+
+O modelo `User` está em `apps/api/prisma/schema.prisma` (tabela `users`: `id`, `name`, `email`, `password`, timestamps).
+
+## Web (`apps/web`) — estrutura, páginas e BFF
+
+### Organização de pastas (principal)
+
+| Pasta / arquivo | Função |
+|-----------------|--------|
+| `src/app/` | App Router do Next.js: `layout.tsx`, páginas e Route Handlers |
+| `src/app/api/auth/*` | BFF: chama a API backend e gerencia cookie httpOnly de sessão |
+| `src/components/` | Componentes de UI; `ui/` agrada primitives (button, card, input, etc.) |
+| `src/contexts/` | React context (ex.: `auth-context.tsx`) |
+| `src/lib/` | Cliente HTTP, config da API, erros, schemas compartilhados, helpers de servidor (`server/session-cookie.ts`, `server/backend-env.ts`) |
+
+### Páginas (rotas do browser)
+
+| Rota | Arquivo | Descrição |
+|------|---------|-----------|
+| `/` | `src/app/page.tsx` | Landing |
+| `/login` | `src/app/login/page.tsx` | Login |
+| `/register` | `src/app/register/page.tsx` | Cadastro |
+| `/dashboard` | `src/app/dashboard/page.tsx` | Área logada (exemplo) |
+
+### Route Handlers (API do Next — BFF)
+
+Estas rotas rodam no servidor Next e conversam com o backend em `API_URL` / `NEXT_PUBLIC_API_URL`:
+
+| Método | Caminho | Descrição |
+|--------|---------|-----------|
+| `POST` | `/api/auth/login` | Encaminha para `POST /auth/login` na API; define cookie de token |
+| `POST` | `/api/auth/register` | Encaminha para `POST /auth/register` |
+| `POST` | `/api/auth/logout` | Remove cookie de sessão |
+| `GET` | `/api/auth/me` | Valida sessão / usuário atual (lado servidor) |
+
+### Componentes
+
+- **`src/components/ui/`** — Peças de interface reutilizáveis: `button`, `card`, `field`, `input`, `label`, `separator`.
+- **`src/components/feature-card.tsx`** — Card de destaque na landing.
+- **`src/components/providers.tsx`** — Provedores React usados no `layout`.
+
+### Outros scripts úteis (raiz)
 
 ```sh
-cd my-turborepo
-turbo login
+pnpm lint
+pnpm check-types
+pnpm format
+pnpm build
 ```
 
-Without global `turbo`, use your package manager:
+---
 
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+Para detalhes de tarefas e cache do Turborepo, veja a [documentação oficial](https://turborepo.dev/docs).
