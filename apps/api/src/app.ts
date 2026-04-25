@@ -5,6 +5,10 @@ import { ZodError } from 'zod'
 
 import { HttpError } from './lib/http-error'
 import { openApiDocument } from './openapi/document'
+
+import { revenueRoutes } from './routes/revenue.routes'
+import { expenseRoutes } from './routes/expense.routes'
+import { transactionRoutes } from './routes/transaction.routes'
 import authRouter, { loginHandler, registerHandler } from './routes/auth.routes'
 import userRouter from './routes/user.routes'
 import bankRouter from './routes/bank.routes'
@@ -59,6 +63,9 @@ export function createApp() {
   app.use('/user', userRouter)
   app.use('/banks', requireAuth, bankRouter)
   app.use('/credit-cards', requireAuth, creditCardRouter)
+  app.use('/revenues', revenueRoutes)
+  app.use('/expenses', expenseRoutes)
+  app.use('/transactions', transactionRoutes) // Opcional: apenas GET / para o dashboard
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     if (res.headersSent) {
