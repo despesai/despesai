@@ -38,6 +38,7 @@ const corsOptions: CorsOptions = {
     }
     callback(new Error('Not allowed by CORS'))
   },
+  credentials: true,
 }
 
 export function createApp() {
