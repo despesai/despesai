@@ -113,9 +113,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             isOpen={openMenus['cartoes']}
             onClick={() => toggleMenu('cartoes')}
           >
-            <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
+            <Link
+              href="/cards"
+              className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900"
+            >
               Meus Cartões
-            </div>
+            </Link>
+
             <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
               Faturas
             </div>
