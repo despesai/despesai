@@ -1,4 +1,9 @@
 // apps/web/src/app/dashboard/page.tsx
+'use client'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAuth } from '@/contexts/auth-context'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { OverviewChart } from '@/components/overview-chart'
@@ -19,6 +24,28 @@ import {
 } from 'lucide-react'
 
 export default function DashboardPage() {
+  const { user, isReady } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isReady && !user) {
+      router.replace('/login')
+    }
+  }, [isReady, user, router])
+
+  if (!isReady || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+          <p className="text-sm font-medium text-slate-500">
+            Carregando despesas…
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
