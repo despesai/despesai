@@ -108,7 +108,7 @@ export function OverviewChart() {
                   border: '1px solid #e2e8f0',
                   boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
                 }}
-                formatter={(value: number) => [`R$ ${value}`, '']}
+                formatter={(value: any) => [`R$ ${value}`, '']}
               />
               {activeTab === 'relacao' && (
                 <Legend wrapperStyle={{ paddingTop: '20px' }} />
