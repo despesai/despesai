@@ -12,11 +12,9 @@ import creditCardRouter from './routes/credit-card.routes'
 import { requireAuth } from './middleware/require-auth.middleware'
 
 const defaultOrigins = [
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  'http://localhost:3002',
-  'http://127.0.0.1:3002',
+  ...process.env.DEFAULT_ORIGINS?.split(',') ?? [],
   'https://despesai.com.br',
+  'https://api.despesai.com.br',
 ]
 
 const extraOrigins = (process.env.CORS_ORIGINS ?? '')

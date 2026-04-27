@@ -1,4 +1,5 @@
 import { ApiError, type ApiErrorBody } from './api-error'
+import { getBackendBaseUrl } from './server/backend-env'
 
 export type SessionUserDTO = {
   id: string
@@ -17,7 +18,10 @@ async function parseJson(res: Response): Promise<unknown> {
 }
 
 export async function bffAuthPost<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(path, {
+  const base = getBackendBaseUrl().endsWith("/") ? getBackendBaseUrl().slice() : getBackendBaseUrl()
+  const fullPath = path.startsWith("/") ? `${base}${path}` : `${base}/${path}`
+
+  const res = await fetch(fullPath, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
