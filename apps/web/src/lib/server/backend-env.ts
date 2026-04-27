@@ -1,7 +1,7 @@
 export function getBackendBaseUrl(): string {
   const u = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL
   if (u) {
-    return u.replace(/\/$/, '')
+    return u.replace(/\/$/, '').replace(/\/api$/, '')
   }
   return 'http://localhost:3002'
 }
