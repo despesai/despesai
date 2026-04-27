@@ -9,7 +9,6 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
     body: JSON.stringify(body),
   })
 
