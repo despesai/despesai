@@ -26,6 +26,69 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return data as T
 }
 
+export const apiClient = {
+  get: async (path: string) => {
+    const base = getApiBaseUrl()
+    const res = await fetch(`${base}${path}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    })
+
+    let data: any = {}
+    try {
+      data = await res.json()
+    } catch {}
+
+    if (!res.ok) {
+      throw new ApiError(res.status, data as ApiErrorBody)
+    }
+
+    return { data }
+  },
+
+  post: async (path: string, body: unknown) => {
+    const data = await apiPost<any>(path, body)
+    return { data }
+  },
+
+  delete: async (path: string) => {
+    const base = getApiBaseUrl()
+    const res = await fetch(`${base}${path}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+
+    let data: any = {}
+    try {
+      data = await res.json()
+    } catch {}
+
+    if (!res.ok) {
+      throw new ApiError(res.status, data as ApiErrorBody)
+    }
+
+    return { data }
+  },
+
+  put: async (path: string, body: unknown) => {
+    const base = getApiBaseUrl()
+    const res = await fetch(`${base}${path}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(body),
+    })
+
+    let data: any = {}
+    try {
+      data = await res.json()
+    } catch {}
+    if (!res.ok) throw new ApiError(res.status, data as ApiErrorBody)
+    return { data }
+  },
+}
+
 export async function apiGet<T>(path: string): Promise<T> {
   const base = getApiBaseUrl()
   const res = await fetch(`${base}${path}`, {

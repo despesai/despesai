@@ -1,15 +1,16 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
 import {
-  LayoutDashboard,
-  Receipt,
-  Library,
-  CreditCard,
-  Settings,
   ChevronDown,
+  CreditCard,
+  LayoutDashboard,
+  Library,
+  Receipt,
+  Settings,
   User,
 } from 'lucide-react'
+import Link from 'next/link'
+import { ReactNode, useState } from 'react'
 
 // ... (O componente SidebarItem continua exatamente igual)
 interface SidebarItemProps {
@@ -71,7 +72,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="flex-1 space-y-2">
-          <SidebarItem icon={LayoutDashboard} label="Visão Geral" />
+          <Link href="/dashboard">
+            <SidebarItem icon={LayoutDashboard} label="Visão Geral" />
+          </Link>
 
           <SidebarItem
             icon={Receipt}
@@ -93,9 +96,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             isOpen={openMenus['bancos']}
             onClick={() => toggleMenu('bancos')}
           >
-            <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
+            <Link
+              href="/bancos"
+              className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900"
+            >
               Minhas Contas
-            </div>
+            </Link>
             <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
               Conciliação
             </div>
@@ -107,9 +113,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             isOpen={openMenus['cartoes']}
             onClick={() => toggleMenu('cartoes')}
           >
-            <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
+            <Link
+              href="/cards"
+              className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900"
+            >
               Meus Cartões
-            </div>
+            </Link>
+
             <div className="cursor-pointer py-1.5 text-xs text-slate-500 hover:text-slate-900">
               Faturas
             </div>

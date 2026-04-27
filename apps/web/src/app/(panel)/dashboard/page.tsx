@@ -1,27 +1,26 @@
-// apps/web/src/app/dashboard/page.tsx
 'use client'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { useAuth } from '@/contexts/auth-context'
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { OverviewChart } from '@/components/overview-chart'
 import {
-  Plus,
-  Upload,
-  Wallet,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Sparkles,
-  TrendingUp,
   AlertTriangle,
-  Lightbulb,
-  Target,
+  ArrowDownCircle,
+  ArrowUpCircle,
   CalendarDays,
   CheckCircle2,
   Clock,
+  Lightbulb,
+  Plus,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Upload,
+  Wallet,
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+
+import { OverviewChart } from '@/components/overview-chart'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function DashboardPage() {
   const { user, isReady } = useAuth()
@@ -299,8 +298,6 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-// ... Função KpiCard mantida ...
 
 function KpiCard({
   title,
