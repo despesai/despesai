@@ -5,8 +5,6 @@ import { requireAuth } from '../middleware/require-auth.middleware'
 const router = Router()
 const service = new TransactionService()
 
-router.use(requireAuth)
-
 router.post('/', async (req, res, next) => {
   try {
     const data = { ...req.body, type: 'EXPENSE' }

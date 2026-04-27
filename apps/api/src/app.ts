@@ -63,9 +63,9 @@ export function createApp() {
   app.use('/user', userRouter)
   app.use('/banks', requireAuth, bankRouter)
   app.use('/credit-cards', requireAuth, creditCardRouter)
-  app.use('/revenues', revenueRoutes)
-  app.use('/expenses', expenseRoutes)
-  app.use('/transactions', transactionRoutes)
+  app.use('/revenues', requireAuth, revenueRoutes)
+  app.use('/expenses', requireAuth, expenseRoutes)
+  app.use('/transactions', requireAuth, transactionRoutes)
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     if (res.headersSent) {
