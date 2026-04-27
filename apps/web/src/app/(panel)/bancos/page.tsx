@@ -1,27 +1,28 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { useAuth } from '@/contexts/auth-context'
-import { bankApi, Bank } from '@/lib/bank-api'
 import {
-  Plus,
-  Landmark,
-  MoreVertical,
   Building2,
-  Loader2,
   CreditCard,
+  Landmark,
+  Loader2,
+  MoreVertical,
+  Plus,
 } from 'lucide-react'
+import { Edit2, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+
 import { BankModal } from '@/components/bank-modal'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Trash2, Edit2 } from 'lucide-react'
+import { useAuth } from '@/contexts/auth-context'
+import { Bank, bankApi } from '@/lib/bank-api'
 
 export default function BancosPage() {
   const { user, isReady } = useAuth()
@@ -31,7 +32,6 @@ export default function BancosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [bankToEdit, setBankToEdit] = useState<Bank | null>(null)
 
-  // Função para carregar os bancos do backend
   const loadBanks = useCallback(async () => {
     try {
       const data = await bankApi.list()
@@ -43,14 +43,12 @@ export default function BancosPage() {
     }
   }, [])
 
-  // Proteção de rota: redireciona se não houver usuário logado
   useEffect(() => {
     if (isReady && !user) {
       router.replace('/login')
     }
   }, [isReady, user, router])
 
-  // Carrega os dados assim que o usuário estiver pronto
   useEffect(() => {
     if (isReady && user) {
       loadBanks()
@@ -58,8 +56,6 @@ export default function BancosPage() {
   }, [isReady, user, loadBanks])
 
   const handleDelete = async (id: string, name: string) => {
-    // Usando confirm nativo para simplicidade.
-    // Pode ser trocado por um AlertDialog do Shadcn no futuro.
     if (
       window.confirm(
         `Tem certeza que deseja excluir a conta ${name}? Esta ação não pode ser desfeita.`
@@ -67,7 +63,7 @@ export default function BancosPage() {
     ) {
       try {
         await bankApi.delete(id)
-        loadBanks() // Atualiza a lista após deletar
+        loadBanks()
       } catch (error) {
         console.error('Erro ao excluir banco:', error)
         alert('Não foi possível excluir a conta.')
@@ -80,13 +76,11 @@ export default function BancosPage() {
     setIsModalOpen(true)
   }
 
-  // Função para abrir modal de Edição
   const handleEdit = (bank: Bank) => {
     setBankToEdit(bank)
     setIsModalOpen(true)
   }
 
-  // Estado de carregamento ou redirecionamento
   if (!isReady || (isReady && !user) || isLoading) {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center gap-4">
@@ -98,7 +92,6 @@ export default function BancosPage() {
     )
   }
 
-  // Cálculo do saldo total garantindo que o valor decimal seja tratado como número
   const totalBalance = banks.reduce(
     (acc, bank) => acc + (Number(bank.balance) || 0),
     0
@@ -106,7 +99,6 @@ export default function BancosPage() {
 
   return (
     <div className="text-foreground mx-auto max-w-6xl space-y-8 pb-12">
-      {/* Header simplificado conforme solicitado */}
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Minhas Contas</h1>
@@ -116,7 +108,6 @@ export default function BancosPage() {
         </div>
       </div>
 
-      {/* Resumo de Saldo Total */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="border-border bg-card text-card-foreground shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -140,14 +131,12 @@ export default function BancosPage() {
         </Card>
       </div>
 
-      {/* Grid de Bancos extraídos do Prisma */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {banks.map((bank) => (
           <Card
             key={bank.id}
             className="border-border bg-card text-card-foreground group relative overflow-hidden shadow-sm transition-shadow hover:shadow-md"
           >
-            {/* Tarja lateral discreta (já que não há campo 'color' no schema) */}
             <div className="bg-primary/20 absolute top-0 bottom-0 left-0 w-1" />
 
             <CardHeader className="flex flex-row items-start justify-between pb-2">
@@ -224,7 +213,6 @@ export default function BancosPage() {
           </Card>
         ))}
 
-        {/* Botão de Criação de Banco (Gatilho do Modal) */}
         <button
           onClick={handleCreateNew}
           className="border-border bg-background/50 text-muted-foreground hover:border-primary/50 hover:bg-primary/5 hover:text-primary flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-6 transition-all"
@@ -241,15 +229,14 @@ export default function BancosPage() {
         </button>
       </div>
 
-      {/* Componente Modal de Criação (Alinhado ao schema.prisma) */}
       <BankModal
         open={isModalOpen}
         onOpenChange={(isOpen) => {
           setIsModalOpen(isOpen)
-          if (!isOpen) setBankToEdit(null) // Limpa o estado ao fechar
+          if (!isOpen) setBankToEdit(null)
         }}
         onSuccess={loadBanks}
-        bankToEdit={bankToEdit} // Passa o banco selecionado
+        bankToEdit={bankToEdit}
       />
     </div>
   )
