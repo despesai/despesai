@@ -12,7 +12,7 @@ import creditCardRouter from './routes/credit-card.routes'
 import { requireAuth } from './middleware/require-auth.middleware'
 
 const defaultOrigins = [
-  ...process.env.DEFAULT_ORIGINS?.split(',') ?? [],
+  'https://www.despesai.com.br',
   'https://despesai.com.br',
   'https://api.despesai.com.br',
 ]
