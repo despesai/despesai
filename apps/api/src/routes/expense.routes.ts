@@ -26,4 +26,27 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.put('/:id', async (req, res, next) => {
+  try {
+    const result = await service.updateTransaction(
+      req.params.id,
+      req.user!.id,
+      req.body,
+      'EXPENSE'
+    )
+    res.json(result)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await service.deleteTransaction(req.params.id, req.user!.id, 'EXPENSE')
+    res.status(204).send()
+  } catch (error) {
+    next(error)
+  }
+})
+
 export { router as expenseRoutes }

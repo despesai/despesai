@@ -10,6 +10,7 @@ export class TransactionRepository {
     return prisma.transaction.findMany({
       where: {
         userId,
+        deletedAt: null,
         ...(type ? { type } : {}),
       },
       orderBy: { date: 'desc' },
@@ -19,7 +20,7 @@ export class TransactionRepository {
 
   async findById(id: string, userId: string) {
     return prisma.transaction.findFirst({
-      where: { id, userId },
+      where: { id, userId, deletedAt: null },
     })
   }
 
@@ -31,8 +32,11 @@ export class TransactionRepository {
   }
 
   async delete(id: string) {
-    return prisma.transaction.delete({
+    return prisma.transaction.update({
       where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
     })
   }
 }

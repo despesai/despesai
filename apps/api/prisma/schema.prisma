@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  email     String    @unique
-  password  String  
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  banks Bank[]
+  banks       Bank[]
   creditCards CreditCard[]
 
   transactions Transaction[]
@@ -24,33 +24,33 @@ model User {
 }
 
 model Bank {
-  id  String @id @default(uuid())
-  bankCode String
-  name String
-  agency String
+  id            String        @id @default(uuid())
+  bankCode      String
+  name          String
+  agency        String
   accountNumber String
-  balance Decimal @db.Decimal(10, 2)
-  isActive Boolean @default(true)
-  userId String
-  user User @relation(fields: [userId], references: [id])
-  transactions Transaction[]
+  balance       Decimal       @db.Decimal(10, 2)
+  isActive      Boolean       @default(true)
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  transactions  Transaction[]
 
   @@map("bank")
 }
-  
+
 model CreditCard {
-  id         String   @id @default(uuid())
+  id         String  @id @default(uuid())
   name       String
   limit      Float
   closingDay Int
   dueDay     Int
-  isEnabled  Boolean  @default(true) @map("is_enabled") // Adicionado aqui
-  
-  userId     String   @map("user_id")
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  isEnabled  Boolean @default(true) @map("is_enabled") // Adicionado aqui
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   transactions Transaction[]
 
@@ -62,25 +62,26 @@ enum TransactionType {
   EXPENSE
 }
 
-
 model Transaction {
-  id           String          @id @default(uuid())
-  description  String
-  amount       Float         
-  date         DateTime
-  type         TransactionType 
-  
-  userId       String
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  bankId       String?
-  bank         Bank?           @relation(fields: [bankId], references: [id])
-  
+  id          String          @id @default(uuid())
+  description String
+  amount      Float
+  date        DateTime
+  type        TransactionType
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bankId String?
+  bank   Bank?   @relation(fields: [bankId], references: [id])
+
   creditCardId String?
-  creditCard   CreditCard?     @relation(fields: [creditCardId], references: [id])
-  
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  creditCard   CreditCard? @relation(fields: [creditCardId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime? @map("deleted_at")
 
   @@map("transactions")
 }

@@ -65,7 +65,7 @@ export function createApp() {
   app.use('/credit-cards', requireAuth, creditCardRouter)
   app.use('/revenues', revenueRoutes)
   app.use('/expenses', expenseRoutes)
-  app.use('/transactions', transactionRoutes) // Opcional: apenas GET / para o dashboard
+  app.use('/transactions', transactionRoutes)
 
   const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     if (res.headersSent) {
