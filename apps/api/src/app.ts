@@ -21,6 +21,7 @@ const defaultOrigins = [
   'http://localhost:3002',
   'http://127.0.0.1:3002',
   'https://despesai.com.br',
+  'https://www.despesai.com.br',
 ]
 
 const extraOrigins = (process.env.CORS_ORIGINS ?? '')
@@ -59,6 +60,8 @@ export function createApp() {
   )
 
   app.use('/auth', authRouter)
+  // Alias when a reverse proxy forwards `/api/*` to Express (same paths as `/auth/*`).
+  app.use('/api/auth', authRouter)
   app.post('/user', registerHandler)
   app.post('/user/me', loginHandler)
   app.use('/user', userRouter)
